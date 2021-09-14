@@ -1,17 +1,50 @@
-/*
- * @Description:
- * @Version: 2.0
- * @Autor: 王敏
- * @Date: 2021-09-13 13:58:11
- * @LastEditors: 王敏
- * @LastEditTime: 2021-09-13 15:50:20
- */
-import styles from './index.less';
+import React, { useRef } from 'react';
+import ProLayout, { PageContainer } from '@ant-design/pro-layout';
+import { Button } from 'antd';
+import customMenuDate from './customMenu';
 
-export default function IndexPage() {
+const waitTime = (time) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, time);
+  });
+};
+
+export default () => {
+  const actionRef = useRef();
   return (
-    <div>
-      <h1 className={styles.title}>Page index</h1>
-    </div>
+    <>
+      <ProLayout
+        style={{
+          height: '100vh',
+          border: '1px solid #ddd',
+        }}
+        actionRef={actionRef}
+        menu={{
+          request: async () => {
+            await waitTime(2000);
+            return customMenuDate;
+          },
+        }}
+        location={{
+          pathname: '/welcome/items',
+        }}
+      >
+        <PageContainer content="欢迎使用">
+          Hello World
+          <Button
+            style={{
+              margin: 8,
+            }}
+            onClick={() => {
+              actionRef.current?.reload();
+            }}
+          >
+            刷新菜单
+          </Button>
+        </PageContainer>
+      </ProLayout>
+    </>
   );
-}
+};
